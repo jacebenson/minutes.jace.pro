@@ -1,0 +1,17 @@
+{
+  "name": "notes-jace-pro",
+  "version": "1.0.0",
+  "description": "A note-taking tool based on minutes.io",
+  "main": "index.js",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "dev": "eleventy --serve --watch",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

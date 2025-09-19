@@ -1,0 +1,152 @@
+---
+layout: base.njk
+title: Meeting Minutes
+---
+
+<div id="app">
+  <div>
+    <div data-component="canvas">
+      <div>
+        <div class="sendPreview"></div>
+        <div class="meetingContainer">
+          <div class="container">
+            <div data-meeting="" data-mode="edit" class="os-win">
+              <header>
+                <div class="project-row">
+                  <input name="project" placeholder="Project" data-autocomplete-spy class="input-field">
+                  <button type="button" id="import-markdown-btn" class="import-markdown-btn">Import from Markdown</button>
+                  <button type="button" id="copy-markdown-btn" class="copy-markdown-btn">Copy as Markdown</button>
+                </div>
+                <div class="title">
+                  <input name="title" placeholder="Title (or Date)" class="input-field title-input" data-autocomplete>
+                </div>
+                <p>
+                  <input name="heldAt" type="datetime-local" class="input-field"> |
+                  <input name="place" placeholder="Place" data-autocomplete-spy class="input-field">
+                </p>
+
+                <figure class="stamp" style="display:none;">
+                  FILED
+                  <figcaption>8/20/2014</figcaption>
+                </figure>
+
+                <div class="custom-logo-container"></div>
+                
+              </header>
+
+              <div class="meta">
+                <table class="table">
+                  <tbody>
+                    <tr class="minuteTaker">
+                      <th>Minute Taker</th>
+                      <td>
+                        <input name="minuteTaker" placeholder="your name and email address" data-autocomplete-spy class="input-field">
+                      </td>
+                    </tr>
+                    <tr class="attendees">
+                      <th>Attendees</th>
+                      <td>
+                        <textarea name="attendees" placeholder="names and email addresses" data-autocomplete-spy data-autocomplete-multiple class="textarea-field"></textarea>
+                      </td>
+                    </tr>
+                    <tr class="others" style="display:none;">
+                      <th>Others</th>
+                      <td>
+                        <textarea name="others" placeholder="names and email addresses" data-autocomplete-spy data-autocomplete-multiple class="textarea-field"></textarea>
+                      </td>
+                    </tr>
+                    <tr class="description" style="display:none;">
+                      <th>About this meeting</th>
+                      <td>
+                        <textarea name="description" placeholder="description" class="textarea-field"></textarea>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <dl class="toggleMetaFields">
+                  <dd data-toggle="others">Others</dd>
+                  <dd data-toggle="description">About this meeting</dd>
+                </dl>
+              </div>
+
+              <div class="minutes">
+                <table data-editable data-editable-spy data-navigable-spy class="table">
+                  <thead>
+                    <tr>
+                      <th class="topic">Topic</th>
+                      <th class="type">Type</th>
+                      <th class="note">Note</th>
+                      <th class="owner">Owner</th>
+                      <th class="due">Due</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-type="todo">
+                      <td class="topic">
+                        <input name="topic" type="hidden">
+                        <input placeholder="Add Topic" class="input-field">
+                      </td>
+                      <td class="type">
+                        <select class="todo" name="type">
+                          <option class="agenda" value="agenda">AGENDA</option>
+                          <option class="decision" value="decision">DECISION</option>
+                          <option class="done" value="done">DONE</option>
+                          <option class="info" value="info">INFO</option>
+                          <option class="idea" value="idea">IDEA</option>
+                          <option class="todo" value="todo" selected>TODO</option>
+                        </select>
+                      </td>
+                      <td class="note">
+                        <textarea name="note" placeholder="Note" class="textarea-field"></textarea>
+                      </td>
+                      <td class="owner">
+                        <input name="owner" placeholder="Initials" data-autocomplete-spy data-autocomplete-multiple class="input-field">
+                      </td>
+                      <td class="due">
+                        <div>
+                          <input name="dueAt" data-smartdate-spy placeholder="2025-09-18" data-format="YYYY-MM-DD" class="input-field date-field">
+                          <a href="#" class="calendar">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+                              <path d="M14 2h-1.5v0.5c0 0.551-0.449 1-1 1s-1-0.449-1-1v-0.5h-5v0.5c0 0.551-0.449 1-1 1s-1-0.449-1-1v-0.5h-1.5c-0.55 0-1 0.45-1 1v11c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1v-11c0-0.55-0.45-1-1-1zM14 13.998c-0.001 0.001-0.001 0.001-0.002 0.002h-11.996c-0.001-0.001-0.001-0.001-0.002-0.002v-8.998h12v8.998zM4.5 3c0.276 0 0.5-0.224 0.5-0.5v-2c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v2c0 0.276 0.224 0.5 0.5 0.5zM11.5 3c0.276 0 0.5-0.224 0.5-0.5v-2c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v2c0 0.276 0.224 0.5 0.5 0.5zM9 6h-5v1h4v2h-4v1h4v2h-4v1h5zM11 13h1v-7h-2v1h1zM13.625 15.375h-11.25c-0.55 0-1-0.325-1-0.875v0.5c0 0.55 0.45 1 1 1h11.25c0.55 0 1-0.45 1-1v-0.5c0 0.55-0.45 0.875-1 0.875z" fill="#ffffff"></path>
+                            </svg>
+                          </a>
+                        </div>
+                      </td>
+                      <td class="actions">
+                        <span data-remove>×</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="notifications">
+    <div>
+      <div class="notifications"></div>
+    </div>
+  </div>
+  
+  <div id="modal"></div>
+
+  <!-- Import Markdown Dialog -->
+  <dialog id="import-dialog">
+    <div class="dialog-content">
+      <h3>Import from Markdown</h3>
+      <p>Paste your markdown content below:</p>
+      <textarea id="markdown-input" placeholder="Paste markdown content here..." rows="15"></textarea>
+      <div class="dialog-buttons">
+        <button type="button" id="cancel-import">Cancel</button>
+        <button type="button" id="confirm-import">Import</button>
+      </div>
+    </div>
+  </dialog>
+</div>

@@ -1,0 +1,409 @@
+/* Custom styles extracted from minutes.io */
+
+#logo {
+  display: block;
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 126px;
+  height: 54px;
+}
+
+#logo polygon,
+#logo polyline,
+#logo path {
+  fill: #202020;
+}
+
+/* Main application styles */
+.sendPreview {
+  /* Add any specific styles for send preview */
+}
+
+.meetingContainer {
+  /* Meeting container styles */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.os-win {
+  /* Windows-specific styles */
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+header p {
+  margin: 5px 0;
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* Input and textarea styling */
+.input-field {
+  border: none;
+  outline: none;
+  background: transparent;
+  border-bottom: 1px dashed #ccc;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  border-bottom-color: #007acc;
+  background: #f9f9f9;
+}
+
+.title-input {
+  font-size: 1.5em;
+  font-weight: bold;
+  min-width: 200px;
+}
+
+.textarea-field {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 8px;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+  min-height: 60px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.textarea-field:focus {
+  border-color: #007acc;
+  outline: 2px solid #007acc;
+  outline-offset: 1px;
+}
+
+.date-field {
+  width: 120px;
+}
+
+.stamp {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transform: rotate(15deg);
+  color: #ff0000;
+  font-weight: bold;
+  border: 2px solid #ff0000;
+  padding: 5px 10px;
+}
+
+/* Add row button */
+.add-row-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-row-btn:hover {
+  background: #005999;
+}
+
+.add-row-btn:active {
+  background: #004477;
+}
+
+.custom-logo-container {
+  /* Container for custom logos */
+}
+
+.meta {
+  margin: 20px 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background: #f5f5f5;
+  font-weight: bold;
+}
+
+.minuteTaker,
+.attendees,
+.others,
+.description {
+  /* Specific row styles */
+}
+
+.toggleMetaFields {
+  margin: 10px 0;
+}
+
+.toggleMetaFields dd {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  padding: 5px 10px;
+  background: #f0f0f0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.toggleMetaFields dd:hover {
+  background: #e0e0e0;
+}
+
+.minutes {
+  margin: 30px 0;
+}
+
+.minutes .table thead th {
+  background: #333;
+  color: white;
+}
+
+.minutes .table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.minutes .table tbody td {
+  vertical-align: top;
+  padding: 10px 8px;
+}
+
+.topic {
+  width: 20%;
+}
+
+.type {
+  width: 15%;
+}
+
+.note {
+  width: 40%;
+}
+
+.owner {
+  width: 10%;
+}
+
+.due {
+  width: 10%;
+}
+
+.actions {
+  width: 5%;
+}
+
+select.todo {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.option.agenda { background: #e3f2fd; }
+.option.decision { background: #e8f5e8; }
+.option.done { background: #f3e5f5; }
+.option.info { background: #fff3e0; }
+.option.idea { background: #fce4ec; }
+.option.todo { background: #ffebee; }
+
+.calendar {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 2px;
+  text-decoration: none;
+}
+
+.calendar svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hint {
+  margin: 20px 0;
+  padding: 10px;
+  background: #f9f9f9;
+  border-left: 3px solid #007acc;
+  font-size: 0.9em;
+}
+
+.hint.navigate {
+  /* Navigation hint styles */
+}
+
+.hint.calendar {
+  /* Calendar hint styles */
+}
+
+.hint .cmd {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.hint .os-mac,
+.hint .os-win {
+  font-family: monospace;
+  background: #eee;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+/* Hide/show based on OS */
+.os-mac { display: none; }
+.os-win { display: inline; }
+
+/* Suggestions dropdown */
+.suggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  min-width: 200px;
+}
+
+.suggestions div {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestions div:last-child {
+  border-bottom: none;
+}
+
+.suggestions div:hover,
+.suggestions div.selected {
+  background: #f0f0f0;
+}
+
+.suggestions div.selected {
+  background: #e3f2fd;
+}
+
+/* Ensure contenteditable fields are properly clickable */
+[contenteditable] {
+  position: relative;
+  z-index: 1;
+}
+
+[contenteditable]:focus {
+  z-index: 2;
+}
+
+/* Actions */
+[data-remove] {
+  cursor: pointer;
+  color: #ff0000;
+  font-size: 1.2em;
+  padding: 2px 5px;
+}
+
+[data-remove]:hover {
+  background: #ffebee;
+  border-radius: 2px;
+}
+
+/* App bar styles */
+.backButton {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.backButton a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.dropup {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  min-width: 160px;
+  z-index: 1000;
+}
+
+.dropdown-menu li {
+  list-style: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #333;
+}
+
+.dropdown-menu a:hover {
+  background: #f0f0f0;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 5px 0;
+}
+
+/* Notifications */
+.notifications {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
+}
+
+/* Welcome section styles */
+#welcome {
+  /* Welcome page styles would go here */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+  
+  .hide-on-small {
+    display: none;
+  }
+  
+  .minutes .table {
+    font-size: 0.9em;
+  }
+}
