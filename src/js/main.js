@@ -917,5 +917,28 @@ style.textContent = `
   #confirm-import:hover {
     background: #218838;
   }
+  
+  /* Footer styles */
+  .site-footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .site-footer p {
+    margin: 0;
+  }
+  
+  .site-footer a {
+    color: #007acc;
+    text-decoration: none;
+  }
+  
+  .site-footer a:hover {
+    text-decoration: underline;
+  }
 `;
 document.head.appendChild(style);
