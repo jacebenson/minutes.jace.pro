@@ -1,43 +1,34 @@
-# Weekly Team Meeting
+# Prj Name
 
-## Sprint Planning Session
+## Title
 
 ### Meeting Details
 
-**Date/Time:** 9/19/2025, 2:30:00 PM
-**Location:** Conference Room A
-**Minute Taker:** John Doe
+- Date/Time: 9/19/2025, 2:21:00 PM
+- Location: Zoom
+- Minute Taker: Jace
 
-**Attendees:**
-- Alice Smith
-- Bob Jones  
-- Carol White
+## Attendees
 
-**Others:**
-- Dave Brown (remote)
-- Eve Wilson (observer)
-
-### Description
-Sprint planning for the upcoming release. We need to review last sprint and plan new items.
+- jace, was, here
+- newline name
 
 ## Minutes
 
-### Review last sprint
-**Type:** decision
-Discussed completed user stories and identified blockers. Team performed well overall.
-**Owner:** Alice
-**Due:** 2025-09-20
+### test
+
+- Type: idea
+- Notes: This is line one\
+This is line two\
+And this is line three
 
 ---
 
-### Plan new sprint
-Planning poker for story estimation. Need to prioritize high-value items.
-**Type:** action
-**Owner:** Bob
-**Due:** 2025-09-22
+### Another Topic
+
+- Owner: JB
+- Due: 2025-12-01
+- Notes: Single line note
 
 ---
 
-### Team retrospective
-Quick retrospective on process improvements needed.
-**Owner:** Carol

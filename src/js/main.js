@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDateTimePicker();
     setupMarkdownCopy();
     setupMarkdownImport();
+    setupNewFormButton();
   }
   
   // Input element enhancements
@@ -188,7 +189,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const currentCell = document.activeElement;
       
       // Handle Enter key for adding new rows (without modifier key)
-      if (e.key === 'Enter' && !modKey && currentCell.closest('.minutes tbody')) {
+      // Skip if we're in a textarea (allow normal line breaks)
+      if (e.key === 'Enter' && !modKey && currentCell.closest('.minutes tbody') && currentCell.tagName !== 'TEXTAREA') {
         const currentRow = currentCell.closest('tr');
         if (currentRow) {
           e.preventDefault();
@@ -386,13 +388,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Meeting details
     markdown += `### Meeting Details\n\n`;
-    if (formattedDate) markdown += `**Date/Time:** ${formattedDate}\n\n`;
-    if (place) markdown += `**Location:** ${place}\n\n`;
-    if (minuteTaker) markdown += `**Minute Taker:** ${minuteTaker}\n\n`;
+    if (formattedDate) markdown += `- Date/Time: ${formattedDate}\n`;
+    if (place) markdown += `- Location: ${place}\n`;
+    if (minuteTaker) markdown += `- Minute Taker: ${minuteTaker}\n`;
+    markdown += '\n';
     
     // Attendees
     if (attendees) {
-      markdown += `**Attendees:**\n`;
+      markdown += `## Attendees\n\n`;
       attendees.split('\n').forEach(attendee => {
         if (attendee.trim()) markdown += `- ${attendee.trim()}\n`;
       });
@@ -418,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let hasMinutes = false;
     let minutesMarkdown = '';
     
-    rows.forEach(row => {
+    rows.forEach((row, index) => {
       const topicInput = row.querySelector('td.topic .input-field');
       const topic = topicInput?.value || '';
       const type = row.querySelector('select[name="type"]')?.value || '';
@@ -426,14 +429,32 @@ document.addEventListener('DOMContentLoaded', function() {
       const owner = row.querySelector('input[name="owner"]')?.value || '';
       const dueAt = row.querySelector('input[name="dueAt"]')?.value || '';
       
-      if (topic || note) {
+      if (topic || note || owner || dueAt) {
         hasMinutes = true;
         minutesMarkdown += `### ${topic || 'Untitled'}\n\n`;
-        if (type && type !== 'todo') minutesMarkdown += `**Type:** ${type}\n\n`;
-        if (note) minutesMarkdown += `${note}\n\n`;
-        if (owner) minutesMarkdown += `**Owner:** ${owner}\n\n`;
-        if (dueAt) minutesMarkdown += `**Due:** ${dueAt}\n\n`;
-        minutesMarkdown += '---\n\n';
+        
+        if (owner) minutesMarkdown += `- Owner: ${owner}\n`;
+        if (dueAt) minutesMarkdown += `- Due: ${dueAt}\n`;
+        if (type && type !== 'todo') minutesMarkdown += `- Type: ${type}\n`;
+        if (note) {
+          // Handle multi-line notes with backslash line endings
+          const noteLines = note.split('\n');
+          if (noteLines.length === 1) {
+            minutesMarkdown += `- Notes: ${note}\n`;
+          } else {
+            minutesMarkdown += `- Notes: ${noteLines[0]}`;
+            for (let i = 1; i < noteLines.length; i++) {
+              if (noteLines[i].trim()) {
+                minutesMarkdown += `\\\n${noteLines[i]}`;
+              } else {
+                minutesMarkdown += `\\\n`;
+              }
+            }
+            minutesMarkdown += '\n';
+          }
+        }
+        
+        minutesMarkdown += '\n---\n\n';
       }
     });
     
@@ -536,16 +557,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const project = line.substring(2).trim();
         document.querySelector('input[name="project"]').value = project;
       }
-      else if (line.startsWith('## ') && !line.includes('Minutes')) {
+      else if (line.startsWith('## ') && !line.includes('Minutes') && !line.includes('Attendees') && !line.includes('Description')) {
         const title = line.substring(3).trim();
         document.querySelector('input[name="title"]').value = title;
       }
       else if (line.startsWith('### Meeting Details')) {
         currentSection = 'details';
       }
-      else if (line.startsWith('### Description')) {
+      else if (line.startsWith('## Description')) {
         currentSection = 'description';
         topicContent = [];
+      }
+      else if (line.startsWith('## Attendees')) {
+        currentSection = 'attendees';
+        attendeesList = [];
       }
       else if (line.startsWith('## Minutes')) {
         currentSection = 'minutes';
@@ -561,9 +586,6 @@ document.addEventListener('DOMContentLoaded', function() {
       else if (line.startsWith('### ') && currentSection === 'minutes') {
         // Save previous topic if exists
         if (currentTopic) {
-          if (topicContent.length > 0) {
-            currentTopic.note = topicContent.join('\n').trim();
-          }
           topics.push(currentTopic);
         }
         // Start new topic
@@ -576,9 +598,84 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         topicContent = [];
       }
+      else if (line.startsWith('- Date/Time:')) {
+        const dateStr = line.substring(12).trim();
+        // Try to parse and convert back to datetime-local format
+        const date = new Date(dateStr);
+        if (!isNaN(date.getTime())) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+          document.querySelector('input[name="heldAt"]').value = formattedDate;
+        }
+      }
+      else if (line.startsWith('- Location:')) {
+        const place = line.substring(11).trim();
+        document.querySelector('input[name="place"]').value = place;
+      }
+      else if (line.startsWith('- Minute Taker:')) {
+        const taker = line.substring(15).trim();
+        document.querySelector('input[name="minuteTaker"]').value = taker;
+      }
+      else if (line.startsWith('- Type:') && currentTopic) {
+        currentTopic.type = line.substring(7).trim();
+      }
+      else if (line.startsWith('- Owner:') && currentTopic) {
+        currentTopic.owner = line.substring(8).trim();
+      }
+      else if (line.startsWith('- Due:') && currentTopic) {
+        currentTopic.dueAt = line.substring(6).trim();
+      }
+      else if (line.startsWith('- Notes:') && currentTopic) {
+        // Handle multi-line notes with backslash line endings
+        let noteContent = line.substring(8).trim();
+        let noteLines = [noteContent];
+        
+        // Look ahead for continuation lines (lines that are continuations from backslash endings)
+        let j = i + 1;
+        while (j < lines.length) {
+          const currentLineToCheck = lines[j - 1]; // The line we just processed
+          const nextLine = lines[j].trim();
+          
+          // If the current line ends with backslash, the next line is a continuation
+          if (currentLineToCheck.endsWith('\\')) {
+            noteLines.push(nextLine);
+            j++;
+            i++; // Skip this line in the main loop
+          } else {
+            // No more continuation lines
+            break;
+          }
+        }
+        
+        // Join all lines with newlines and remove backslashes
+        currentTopic.note = noteLines.map(line => line.replace(/\\$/, '')).join('\n');
+      }
+      else if (line.startsWith('- ') && currentSection === 'attendees') {
+        attendeesList.push(line.substring(2).trim());
+      }
+      else if (line === '---' && currentSection === 'minutes') {
+        // End of current topic
+        if (currentTopic) {
+          topics.push(currentTopic);
+          currentTopic = null;
+        }
+        topicContent = [];
+      }
+      else if (currentSection === 'description' && line && !line.startsWith('#')) {
+        topicContent.push(line);
+      }
+      else if (!line) {
+        // Empty line - could be end of a section
+        continue;
+      }
+      
+      // Handle legacy format compatibility
       else if (line.startsWith('**Date/Time:**')) {
         const dateStr = line.substring(14).trim();
-        // Try to parse and convert back to datetime-local format
         const date = new Date(dateStr);
         if (!isNaN(date.getTime())) {
           const year = date.getFullYear();
@@ -603,7 +700,6 @@ document.addEventListener('DOMContentLoaded', function() {
         attendeesList = [];
       }
       else if (line.startsWith('**Others:**')) {
-        // Save attendees if we were collecting them
         if (attendeesList.length > 0) {
           const attendeesText = attendeesList.join('\n');
           document.querySelector('textarea[name="attendees"]').value = attendeesText;
@@ -619,30 +715,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       else if (line.startsWith('**Due:**') && currentTopic) {
         currentTopic.dueAt = line.substring(8).trim();
-      }
-      else if (line.startsWith('- ') && currentSection === 'attendees') {
-        attendeesList.push(line.substring(2).trim());
-      }
-      else if (line.startsWith('- ') && currentSection === 'others') {
-        othersList.push(line.substring(2).trim());
-      }
-      else if (line === '---' && currentSection === 'minutes') {
-        // End of current topic - save the note content
-        if (currentTopic && topicContent.length > 0) {
-          currentTopic.note = topicContent.join('\n').trim();
-        }
-        topicContent = [];
-      }
-      else if (currentSection === 'description' && line) {
-        topicContent.push(line);
-      }
-      else if (currentSection === 'minutes' && currentTopic && line && !line.startsWith('**')) {
-        // Collect content for current topic (but skip bold fields)
-        topicContent.push(line);
-      }
-      else if (!line) {
-        // Empty line - could be end of a section
-        continue;
       }
     }
     
@@ -660,9 +732,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('textarea[name="description"]').value = descText;
     }
     if (currentSection === 'minutes' && currentTopic) {
-      if (topicContent.length > 0) {
-        currentTopic.note = topicContent.join('\n').trim();
-      }
       topics.push(currentTopic);
     }
     
@@ -685,6 +754,77 @@ document.addEventListener('DOMContentLoaded', function() {
       importButton.textContent = originalText;
       importButton.style.background = '#28a745';
     }, 2000);
+  }
+
+  // New form button functionality
+  function setupNewFormButton() {
+    const newButton = document.getElementById('new-form-btn');
+    const dialog = document.getElementById('reset-dialog');
+    const cancelButton = document.getElementById('cancel-reset');
+    const confirmButton = document.getElementById('confirm-reset');
+    
+    if (!newButton || !dialog) return;
+
+    // Open confirmation dialog
+    newButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+
+    // Cancel reset
+    cancelButton.addEventListener('click', function() {
+      dialog.close();
+    });
+
+    // Confirm reset
+    confirmButton.addEventListener('click', function() {
+      clearForm();
+      resetToDefaults();
+      dialog.close();
+      
+      // Show success feedback
+      const originalText = newButton.textContent;
+      newButton.textContent = 'Cleared!';
+      newButton.style.background = '#28a745';
+      
+      setTimeout(() => {
+        newButton.textContent = originalText;
+        newButton.style.background = '#dc3545';
+      }, 2000);
+    });
+
+    // Close on escape or backdrop click
+    dialog.addEventListener('click', function(e) {
+      if (e.target === dialog) {
+        dialog.close();
+      }
+    });
+  }
+
+  function resetToDefaults() {
+    // Reset date/time to current
+    const dateTimeInput = document.querySelector('input[name="heldAt"]');
+    if (dateTimeInput) {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+    
+    // Focus the project input
+    const projectInput = document.querySelector('input[name="project"]');
+    if (projectInput) {
+      projectInput.focus();
+    }
+    
+    // Ensure default row exists in table
+    const tbody = document.querySelector('.minutes tbody');
+    if (tbody && tbody.children.length === 0) {
+      window.addNewRow();
+    }
   }
 
   function clearForm() {
@@ -799,7 +939,8 @@ style.textContent = `
   }
   
   .copy-markdown-btn,
-  .import-markdown-btn {
+  .import-markdown-btn,
+  .new-form-btn {
     background: #007acc;
     color: white;
     border: none;
@@ -816,12 +957,20 @@ style.textContent = `
     background: #28a745;
   }
   
+  .new-form-btn {
+    background: #dc3545;
+  }
+  
   .copy-markdown-btn:hover {
     background: #005a9e;
   }
   
   .import-markdown-btn:hover {
     background: #218838;
+  }
+  
+  .new-form-btn:hover {
+    background: #c82333;
   }
   
   .copy-markdown-btn:active {
@@ -832,14 +981,20 @@ style.textContent = `
     background: #1e7e34;
   }
   
+  .new-form-btn:active {
+    background: #bd2130;
+  }
+  
   .copy-markdown-btn:focus,
-  .import-markdown-btn:focus {
+  .import-markdown-btn:focus,
+  .new-form-btn:focus {
     outline: 2px solid #007acc;
     outline-offset: 2px;
   }
   
   /* Dialog styles */
-  #import-dialog {
+  #import-dialog,
+  #reset-dialog {
     border: none;
     border-radius: 8px;
     padding: 0;
@@ -849,7 +1004,8 @@ style.textContent = `
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
   
-  #import-dialog::backdrop {
+  #import-dialog::backdrop,
+  #reset-dialog::backdrop {
     background: rgba(0, 0, 0, 0.5);
   }
   
@@ -900,12 +1056,14 @@ style.textContent = `
     font-weight: 500;
   }
   
-  #cancel-import {
+  #cancel-import,
+  #cancel-reset {
     background: #6c757d;
     color: white;
   }
   
-  #cancel-import:hover {
+  #cancel-import:hover,
+  #cancel-reset:hover {
     background: #5a6268;
   }
   
@@ -916,6 +1074,15 @@ style.textContent = `
   
   #confirm-import:hover {
     background: #218838;
+  }
+  
+  #confirm-reset {
+    background: #dc3545;
+    color: white;
+  }
+  
+  #confirm-reset:hover {
+    background: #c82333;
   }
   
   /* Footer styles */

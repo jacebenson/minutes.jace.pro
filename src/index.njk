@@ -14,6 +14,7 @@ title: Meeting Minutes
               <header>
                 <div class="project-row">
                   <input name="project" placeholder="Project" data-autocomplete-spy class="input-field">
+                  <button type="button" id="new-form-btn" class="new-form-btn">New</button>
                   <button type="button" id="import-markdown-btn" class="import-markdown-btn">Import from Markdown</button>
                   <button type="button" id="copy-markdown-btn" class="copy-markdown-btn">Copy as Markdown</button>
                 </div>
@@ -21,7 +22,7 @@ title: Meeting Minutes
                   <input name="title" placeholder="Title (or Date)" class="input-field title-input" data-autocomplete>
                 </div>
                 <p>
-                  <input name="heldAt" type="datetime-local" class="input-field"> |
+                  <input name="heldAt" type="datetime-local" class="input-field"> 
                   <input name="place" placeholder="Place" data-autocomplete-spy class="input-field">
                 </p>
 
@@ -40,7 +41,7 @@ title: Meeting Minutes
                     <tr class="minuteTaker">
                       <th>Minute Taker</th>
                       <td>
-                        <input name="minuteTaker" placeholder="your name and email address" data-autocomplete-spy class="input-field">
+                        <input name="minuteTaker" placeholder="your name and email address" class="input-field" autocomplete="off">
                       </td>
                     </tr>
                     <tr class="attendees">
@@ -150,8 +151,21 @@ title: Meeting Minutes
     </div>
   </dialog>
 
+  <!-- Reset Form Confirmation Dialog -->
+  <dialog id="reset-dialog">
+    <div class="dialog-content">
+      <h3>New Meeting Notes</h3>
+      <p>This will clear all current data and start fresh. Are you sure you want to continue?</p>
+      <div class="dialog-buttons">
+        <button type="button" id="cancel-reset">Cancel</button>
+        <button type="button" id="confirm-reset">Clear All</button>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Footer -->
   <footer class="site-footer">
     <p>Inspired by <a href="https://minutes.io" target="_blank" rel="noopener">minutes.io</a></p>
+    <p>On <a href="https://github.com/jacebenson/minutes.jace.pro" target="_blank" rel="noopener">GitHub</a></p>
   </footer>
 </div>
