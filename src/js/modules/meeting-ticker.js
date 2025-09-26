@@ -94,6 +94,13 @@ export function setupMeetingTicker() {
     // Initial count on page load
     updateAttendeeCount();
   }
+
+  // Watch for changes in the heldAt field to update start time
+  const heldAtInput = document.querySelector('input[name="heldAt"]');
+  if (heldAtInput) {
+    heldAtInput.addEventListener('input', updateStartTime);
+    heldAtInput.addEventListener('change', updateStartTime);
+  }
   
   // Toggle section visibility
   toggleButton.addEventListener('click', function(e) {
@@ -207,6 +214,25 @@ export function setupMeetingTicker() {
     }
   }
   
+  function updateStartTime() {
+    if (!isRunning) return; // Only update if ticker is currently running
+    
+    // Get the current meeting start time from the heldAt field
+    const heldAtInput = document.querySelector('input[name="heldAt"]');
+    const heldAtValue = heldAtInput?.value;
+    
+    if (heldAtValue) {
+      const newStartTime = new Date(heldAtValue);
+      const now = new Date();
+      // If the meeting time is in the future, use current time instead
+      if (newStartTime > now) {
+        startTime = now;
+      } else {
+        startTime = newStartTime;
+      }
+    }
+  }
+
   function updateCost() {
     if (!startTime || !isRunning) return;
     
